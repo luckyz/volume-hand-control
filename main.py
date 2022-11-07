@@ -5,9 +5,21 @@ import HandTrackingModule as htm
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from urllib.parse import urljoin
+from requests.auth import HTTPBasicAuth
+import os
+from dotenv import load_values
+
+load_values(".env")
+
+WEBCAM_USER = os.getenv("WEBCAM_USER")
+WEBCAM_PASSWORD = os.getenv("WEBCAM_PASSWORD")
+WEBCAM_IP = os.getenv("WEBCAM_IP")
+WEBCAM_PORT = os.getenv("WEBCAM_PORT")
+WEBCAM_BASE=f"http://{WEBCAM_USER}:{WEBCAM_PASSWORD}@{WEBCAM_IP}:{WEBCAM_PORT}"
 
 ###############################
-wCam, hCam = 640, 480
+wCam, hCam = 1280, 720
 pTime = 0
 min_dist = 25
 max_dist = 190
@@ -18,7 +30,7 @@ area = 0
 vol_color = (51, 255, 255)
 ################################
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(urljoin(WEBCAM_BASE, "videofeed"))
 cap.set(3, wCam)
 cap.set(4, hCam)
 detector = htm.HandDetector(detection_conf=0.75, max_hands=1)
@@ -38,6 +50,7 @@ while True:
 
     # Find Hand
     img = detector.findHands(img, draw=True)
+    img = cv2.resize(img, (wCam, hCam), cv2.INTER_AREA)
     lmList, b_box = detector.findPosition(img, draw=True)
     if len(lmList) != 0:
 
@@ -90,4 +103,5 @@ while True:
     cv2.putText(img, f'FPS: {int(fps)}', (30, 50), cv2.FONT_HERSHEY_COMPLEX,  0.7, (51, 255, 255), 2)
 
     cv2.imshow("Frame", img)
+    # cv2.moveWindow("Frame", 0, 0)
     cv2.waitKey(1)
