@@ -7,9 +7,9 @@ import HandTrackingModule as htm
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-from dotenv import load_values
+from dotenv import load_dotenv
 
-load_values(".env")
+load_dotenv()
 
 WEBCAM_USER = os.getenv("WEBCAM_USER")
 WEBCAM_PASSWORD = os.getenv("WEBCAM_PASSWORD")
@@ -26,7 +26,7 @@ vol = 0
 vol_bar = 340
 vol_perc = 0
 area = 0
-vol_color = (51, 255, 255)
+vol_color = (0, 0, 0)
 ################################
 
 cap = cv2.VideoCapture(urljoin(WEBCAM_BASE, "videofeed"))
@@ -80,7 +80,7 @@ while True:
                 cv2.circle(img, (line_info[4], line_info[5]), 5, (255, 255, 0), cv2.FILLED)
                 vol_color = (255, 255, 255)
             else:
-                vol_color = (51, 255, 255)
+                vol_color = (0, 0, 0)
 
             # Min - Max Vol Button Color
             if len_line < min_dist:
