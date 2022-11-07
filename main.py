@@ -1,13 +1,12 @@
 import cv2
-import numpy as np
+import os
 import time
+from urllib.parse import urljoin
+import numpy as np
 import HandTrackingModule as htm
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-from urllib.parse import urljoin
-from requests.auth import HTTPBasicAuth
-import os
 from dotenv import load_values
 
 load_values(".env")
